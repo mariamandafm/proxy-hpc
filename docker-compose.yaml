@@ -1,0 +1,73 @@
+# internet ──https──► nginx ──► satosa ──► cuidapp ──► postgresql (banco "postgres")
+#                                  └─────────────────► postgresql (banco "satosa_oidc")
+#
+# Antes de subir: copie .env.example para .env e preencha os valores.
+# A imagem do SATOSA é montada a partir de ./SATOSA, ./pysaml2, ./idpy-oidc,
+# ./satosa-oidc-frontend e ./satosa-micro_services.
+
+services:
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "443:443"
+    volumes:
+      - ./deploy/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      # Caminhos do certificado e da chave TLS no host, definidos no .env.
+      - "${SSL_CERT_PATH:?defina SSL_CERT_PATH no .env}:/etc/nginx/ssl/server.crt:ro"
+      - "${SSL_KEY_PATH:?defina SSL_KEY_PATH no .env}:/etc/nginx/ssl/server.key:ro"
+    depends_on:
+      - satosa
+
+  satosa:
+    build:
+      context: ./deploy/satosa
+      additional_contexts:
+        satosa_src: ./SATOSA
+        pysaml2: ./pysaml2
+        idpy_oidc: ./idpy-oidc
+        satosa_oidc_frontend: ./satosa-oidc-frontend
+        satosa_micro_services: ./satosa-micro_services
+    environment:
+      SATOSA_BASE_URL: "${SATOSA_BASE_URL:?defina SATOSA_BASE_URL no .env}"
+      SATOSA_STATE_ENCRYPTION_KEY: "${SATOSA_STATE_ENCRYPTION_KEY:?defina SATOSA_STATE_ENCRYPTION_KEY no .env}"
+      OIDC_DB_URI: "postgresql://postgres:${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env}@postgresql:5432/satosa_oidc"
+      OIDC_TOKEN_ENCRYPTION_PASSWORD: "${OIDC_TOKEN_ENCRYPTION_PASSWORD:?defina OIDC_TOKEN_ENCRYPTION_PASSWORD no .env}"
+      # Mesmo valor configurado como api_keys no cuidapp.
+      CUID_ACCESS_TOKEN: "${CUID_API_KEY:?defina CUID_API_KEY no .env}"
+    volumes:
+      - ./SATOSA/configs:/opt/satosa/configs:ro
+      # Metadados SAML locais (perun-sp-metadata.xml).
+      - ./deploy/satosa/metadata:/opt/satosa/metadata:ro
+      # Chaves SAML: as ausentes são geradas na primeira execução e ficam aqui.
+      - ./deploy/satosa/keys:/opt/satosa/keys
+    depends_on:
+      postgresql:
+        condition: service_healthy
+      cuidapp:
+        condition: service_started
+
+  cuidapp:
+    build:
+      context: ./cuidapp
+    environment:
+      db_connection_url: "postgresql://postgres:${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env}@postgresql:5432/postgres"
+      api_keys: '["${CUID_API_KEY:?defina CUID_API_KEY no .env}"]'
+    depends_on:
+      postgresql:
+        condition: service_healthy
+
+  postgresql:
+    image: postgres:15.2-alpine3.17
+    environment:
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env}"
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+      - ./deploy/postgresql/init-satosa-oidc.sql:/docker-entrypoint-initdb.d/init-satosa-oidc.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgresql-data:
