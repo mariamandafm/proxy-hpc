@@ -1,0 +1,14 @@
+module: coreaai_proxy_plugins.satosa.micro_services.static_attributes_policy_engine.StaticAttributesPolicyEngine
+name: StaticAttributesPolicyEngine
+config:
+  default: []
+  https://entityid.org:
+    # If an attribute is already set, the default behaviour is to APPEND values.
+    # If the policy is set to OVERWRITE, then attribute values will be replaced.
+    # If the policy is set to DO_NOT_CHANGE_IF_EXISTS, then keep the original values
+    policy: DO_NOT_CHANGE_IF_EXISTS
+    static_attributes:
+      epa:
+      - urn:geant:service_foo.org:loa:1
+      epsa:
+      - member@service_foo.org

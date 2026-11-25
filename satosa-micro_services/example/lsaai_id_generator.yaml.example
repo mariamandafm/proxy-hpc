@@ -1,0 +1,7 @@
+module: geant_satosa_micro_services.lsaai_id_generator.LsaaiIdGenerator
+name: LsaaiIdGenerator
+config:
+    user_id_from_attrs: [nameid, edupersontargetedid, edupersonuniqueid, eppn, givenname, surname, mail, displayname, epsa, edupersonorcid]
+    id_attribute_name: schacPersonalUniqueCode
+    user_id_hash_salt: 234200234@#@$!@$23
+    scope: lifescienceid.org

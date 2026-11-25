@@ -1,0 +1,14 @@
+include VERSION
+include LICENSE
+include NOTICE
+include README.md
+
+graft docs
+prune docs/build
+
+prune example
+prune .github
+
+global-exclude *.py[cod]
+global-exclude __pycache__
+global-exclude *.egg-info

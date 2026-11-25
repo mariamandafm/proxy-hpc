@@ -1,0 +1,2 @@
+include VERSION
+include src/coreaai_proxy_plugins/satosa/test/test_resources/*

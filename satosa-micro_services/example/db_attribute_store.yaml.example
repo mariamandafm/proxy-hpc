@@ -1,0 +1,17 @@
+module: DBAttributeStore
+name: DBAttributeStore
+config:
+  db_host:
+  db_user:
+  db_name:
+  db_password:
+  db_host_secondary:
+  db_user_secondary:
+  db_name_secondary:
+  db_password_secondary:
+  db_connect_timeout:
+  ca_path:
+  queries: []
+  attribute_as_id:
+  urn_subnamespace:
+  trigger_url:

@@ -1,0 +1,19 @@
+module: coreaai_proxy_plugins.satosa.micro_services.consent.Consent
+name: Consent
+config:
+  "default":
+    api_url: "http://example.com:8081"
+    redirect_url: "https://example.com/consent"
+    sign_key: "domain.key"
+    authorizations_state_key: authorizations
+    virtual_countries:
+      "int": "International organisation"
+    services_to_country_code:
+      "https://example.gr/sp": "GRC"
+      "https://example.us/sp": "USA"
+      "https://example.se/sp": "SWE"
+    services_marked_as_adequate_level_of_data_protection:
+      "https://example.com/sp": "scc"
+    services_agreed_to_tou:
+      - "https://example.com/sp"
+  "https://sp.example.com/sp/shibboleth": []

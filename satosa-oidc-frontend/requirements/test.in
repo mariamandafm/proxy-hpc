@@ -1,0 +1,5 @@
+-e file:.#egg=satosa-oidc-frontend
+pytest
+pre-commit
+beautifulsoup4
+requests-mock

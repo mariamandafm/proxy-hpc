@@ -1,0 +1,2 @@
+module: coreaai_proxy_plugins.satosa.micro_services.metainfo.MetaInfoRequester
+name: MetaInfoRequester

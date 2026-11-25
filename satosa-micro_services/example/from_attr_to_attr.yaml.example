@@ -1,0 +1,8 @@
+module: FromAttrToAttr
+name: FromAttrToAttr
+config:
+    from_attr_to_attr: []
+    "https://test-sp.admin.skanct.com/simplesaml/module.php/saml/sp/metadata.php/default-sp":
+        from_attr_to_attr:
+            - [edupersonuniqueid, edupersontargetedid]
+            - [epsa, epe]

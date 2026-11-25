@@ -1,0 +1,15 @@
+module: satosa_oidc_frontend.OpenIDConnectFrontend
+name: OIDC
+config:
+    # PostgreSQL is the operationally supported database. MySQL is expected to
+    # work but is not tested operationally. Omit db_uri for in-memory state
+    # (non-production only).
+    db_uri: "postgresql://user:pass@host/db"
+    token_session_encryption_password: "<random secret>"
+    response_types_supported: ["code", "id_token token"]
+    scopes_supported: ["openid", "email"]
+    id_token_default_claims:
+        - email
+    enable_registration_endpoint: True
+    enable_introspection_endpoint: True
+    jwt_access_token: True

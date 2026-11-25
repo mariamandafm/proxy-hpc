@@ -1,0 +1,14 @@
+module: coreaai_proxy_plugins.satosa.micro_services.mms_client.MMSClient
+name: MMSClient
+config:
+  api_uri: https://example.com/api.php
+  api_user: user_foo
+  api_secret: Password123asdf
+  attribute_as_uid: edupersonuniqueid
+
+  skip_services:
+    - "https://example.org/sp1"
+    - "https://example.org/sp2"
+
+  attribute_mappings:
+    "mms_attribute": "satosa_internal_attribute"

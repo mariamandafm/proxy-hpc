@@ -1,0 +1,51 @@
+[project]
+name = "coreaai_proxy_plugins"
+description = "SATOSA micro_services by GEANT"
+license = {text = "Apache License Version 2.0"}
+requires-python = ">=3.9"
+dynamic = ["version"] # Handled by setuptools below
+
+dependencies = [
+    "SATOSA>=8.0.1",
+    "aarc-entitlement>=v1.0.5",
+    "ldap3",
+    "cryptojwt",
+    "requests",
+    "validators",
+    "toolz",
+    "pydantic>1.8.2,<2",
+    "requests-toolbelt",
+    "PyJWT>=2.0.0,<3.0.0",
+    "typing_extensions>=4.0.0,<5.0.0",
+    "pysaml2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black>=25.11.0",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.dynamic]
+version = {file = "VERSION"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["coreaai_proxy_plugins", "coreaai_proxy_plugins.*"]
+
+[tool.uv.sources]
+pysaml2 = {git = "ssh://git@gitlab.geant.org/core-aai-platform/pysaml2.git", tag = "v7.5.4-coreaai-0.1.0"}
+satosa = {git = "ssh://git@gitlab.geant.org/core-aai-platform/SATOSA.git", tag = "v8.5.1-CoreAAI-0.1.0"}
+
+[tool.pytest]
+testpaths = ["test"]
+
+[tool.mypy]
+plugins = ["pydantic.mypy"]

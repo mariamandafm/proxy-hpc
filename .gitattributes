@@ -1,0 +1,3 @@
+# Scripts executados dentro dos containers Linux: com CRLF (core.autocrlf no
+# Windows) falham com "bash\r: No such file or directory".
+*.sh text eol=lf

@@ -1,0 +1,28 @@
+module: satosa.micro_services.inject_attributes.InjectAttributes
+name: InjectAttributes
+config:
+  inject_attributes:
+    - an_attribute_name: an_attribute_value
+
+  # a list of issuers that will always have the attributes injected
+  force_issuers:
+    - https://federation.example.com/idp
+
+  # the strategy to use when multiple search properties are defined:
+  # any: inject attributes if any search is matched
+  # all: inject attributes if all searches are matched
+  strategy: all
+  search_for:
+    attribute: some_attribute
+    any_attributes:
+      - some_attribute_a
+      - some_attribute_b
+    all_attributes:
+      - some_attribute_a
+      - some_attribute_b
+    entity_category:
+      - some_entity_category_a
+      - some_entity_category_b
+    entity_category_support:
+      - some_entity_category_a
+      - some_entity_category_b

@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  postgresql:
+    image: postgres:15.2-alpine3.17
+    environment:
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-LOCAL_PASSWORD}"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgresql-volume:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  cuidapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # api_keys e enable_util_endpoints vêm do .env local (copie .env.dst para .env
+    # antes de subir — api_keys não tem valor padrão no código e a aplicação não
+    # inicia sem ele).
+    env_file:
+      - .env
+    environment:
+      # Sobrescreve o que .env.dst define para SQLite: dentro do compose, o Postgres
+      # é acessado pelo hostname do serviço, não por 127.0.0.1.
+      db_connection_url: "postgresql://postgres:${POSTGRES_PASSWORD:-LOCAL_PASSWORD}@postgresql:5432/postgres"
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    networks:
+      - default
+      - core-aai-net
+
+volumes:
+  postgresql-volume:
+
+networks:
+  default:
+  # Rede externa compartilhada com o scim-api (ver scim-api/docker-compose.yaml).
+  # Criar uma vez, antes de subir qualquer um dos dois composes:
+  #   docker network create core-aai-net
+  core-aai-net:
+    external: true

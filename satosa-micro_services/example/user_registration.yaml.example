@@ -1,0 +1,8 @@
+module: UserRegistration
+name: UserRegistration
+config:
+  "":
+    found_in_mms_attr: found_in_mms
+    redirect_url: https://user.portal.example.com
+
+

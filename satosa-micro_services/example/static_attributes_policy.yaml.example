@@ -1,0 +1,9 @@
+module: coreaai_proxy_plugins.satosa.micro_services.attribute_modifications.AddStaticAttributesPolicy
+name: AddAttributes
+config:
+    "":
+        static_attributes:
+            eduPersonScopedAffiliation:
+                - member@example.com
+            eduPersonEntitlement:
+                - urn:geant:example.com:service:example_service
