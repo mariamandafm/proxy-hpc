@@ -1,3 +1,4 @@
+#!/bin/sh
 set -eu
 
 DST=/etc/satosa
